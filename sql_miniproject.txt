@@ -1,0 +1,46 @@
+# To create a table and insert values into table
+
+create table location(locationid varchar(6) primary key,city varchar(10),state varchar(16),country varchar(19),postalcode int);
+insert into location values('L001','Bangalore','Karnataka','India',612456);
+insert into location values('L002','Chennai','TamilNadu','India',612236);
+insert into location values('L003','Trivandrum','Kerala','India',613946);
+
+# To view the table created above
+select * from location 
+    
+create table positions(positionid varchar(6) primary key,positiontitle varchar(10),minsal float,maxsal float);
+insert into positions values('P001','rec',30000,60000);
+insert into positions values('P002','fin',45000,65000);
+select * from positions
+    
+create table jobhistory(empid varchar(6),doj varchar(18),positionid varchar(6),deptid varchar(6));
+insert into jobhistory values('E001','2023-02-04','P001','D001');
+insert into jobhistory values('E002','2023-05-01','P002','D002');
+insert into jobhistory values('E003','2022-02-10','P001','D002');
+insert into jobhistory values('E004','2023-03-16','P002','D001');
+select * from jobhistory
+
+create table department (deptid varchar(6) primary key,deptname varchar(50),managerid varchar(6),locationid varchar(10),
+    foreign key (locationid) references location(locationid));
+insert into department values('D001','recruitment','M001','L001');
+insert into department values('D002','finance','M002','L003');
+select * from department
+
+create table Employees (empid varchar(6) primary key,empname varchar(50),dob varchar(20),email varchar(20),phoneno int,gender varchar(10),deptid varchar(6),
+    locationid varchar(6),positionid varchar(6),salary float,foreign key (deptid) references department(deptid),
+    foreign key (locationid) references location(locationid));
+insert into employees values('E001','abcd','2001-02-03','abc@gmail.com',9648324850,'male','D001','L001','P001',25000);
+insert into employees values('E002','xyz','2000-01-05','xyz@gmail.com',9344274730,'female','D002','L001','P002',30000);
+insert into employees values('E003','klmn','2002-01-03','klmn@gmail.com',9623796450,'female','D001','L002','P002',38000);
+insert into employees values('E004','pqrs','1999-02-15','pqrs@gmail.com',9879645120,'female','D002','L003','P001',60000);
+select * from employees
+
+# Sample Queries to retrieve the information 
+
+select empid,empname from employees;
+select a.empname,b.city from employees a,location b where a.locationid=b.locationid; 
+select empid,empname,salary from employees order by salary;
+select a.empid,a.empname,b.positiontitle,a.salary from employees a inner join positions b on a.positionid=b.positionid where a.salary>30000;
+select a.empid,a.empname,b.positiontitle,c.doj from employees a inner join positions b on a.positionid=b.positionid inner join jobhistory c on a.positionid=c.positionid;
+select * from employees natural join positions natural join location;
+select a.empid,a.empname,b.deptname,b.managerid from employees a left outer join department b on a.deptid=b.deptid;
